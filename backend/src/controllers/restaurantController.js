@@ -65,6 +65,14 @@ const getRestaurants= async (req,res)=>{
 
 const getAllRestaurants=async(req,res)=>{
     try{
+        const keyword=req.query.search
+         ? { 
+            $or:[
+            {name:{$regex:req.query.search, $options:'i'}},
+            {cuisine:{$regex:req.query.search, $options:'i'}},
+        ],
+    }
+    :{};
         const restaurants=await Restaurant.find({});
         res.json(restaurants);
     } catch (error){

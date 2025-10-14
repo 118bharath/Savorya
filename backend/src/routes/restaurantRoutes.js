@@ -13,12 +13,13 @@ const menuItemRoutes=require('./menuItemRoutes');
 const router=express.Router();
 
 router.route('/').get(getAllRestaurants);
-router.route('/:id').get(getRestaurantById);
 
 router.use('/:restaurantId/menu',menuItemRoutes);
+router.route('/create').post(protect,admin,createRestaurant);
 router.route('/myrestaurants').get(protect, admin, getRestaurants);
 
-router.route('/create').post(protect,admin,createRestaurant);
+
+router.route('/:id').get(getRestaurantById);
 router.route('/:id/admin').put(protect,admin,updateRestaurant).delete(protect,admin,deleteRestaurant);
 
 module.exports=router;
