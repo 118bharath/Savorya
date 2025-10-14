@@ -1,65 +1,59 @@
-import React, {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import restaurantService from '../services/restaurantService';
-import {useCart} from '../context/CartContext';
+import FoodItem from '../components/FoodItem/FoodItem'; 
 
-const RestaurantMenuPage=()=>{
-    const {id: restaurantId}=useParams();
-    const [restaurant,setRestaurant]=useState(null);
-    const [menu,setMenu]=useState([]);
-    const[isLoading,setIsLoading]=useState(true);
-    const [error,setError]=useState(null);
-    const {addToCart} = useCart();
+const RestaurantMenuPage = () => {
+  const { id: restaurantId } = useParams(); // Get id from url
+  const [restaurant, setRestaurant] = useState(null);
+  const [menu, setMenu] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(()=>{
-        const fetchRestaurantDetails=async()=>{
-            try{
-                const data=await restaurantService.getRestaurantById(restaurantId);
-                setRestaurant(data.restaurant);
-                setMenu(data.menu);
-            }catch{
-                setError('Could not fetch restaurant details');
-            }finally{
-                setIsLoading(false)
-            }
-        };
+  // This logic fetches the data for this specific page
+  useEffect(() => {
+    const fetchRestaurantDetails = async () => {
+      try {
+        const data = await restaurantService.getRestaurantById(restaurantId);
+        setRestaurant(data.restaurant);
+        setMenu(data.menu);
+      } catch (err) {
+        setError('Could not fetch restaurant details.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchRestaurantDetails();
+  }, [restaurantId]);
 
-        fetchRestaurantDetails()
-    },[restaurantId]);
+  if (isLoading) return <p className="text-center my-10">Loading menu...</p>;
+  if (error) return <p className="text-center my-10 text-red-500">{error}</p>;
+  if (!restaurant) return <p className="text-center my-10">Restaurant not found.</p>;
 
-    if(isLoading) return <p className='text-center mt-8'>Loading menu..</p>;
-    if (error) return <p className='text-center mt-8 text-red-500'>{error}</p>;
-    if (!restaurant) return <p className='text-center mt-8'>Restaurant not found.</p>;
+  return (
+    <div className="container mx-auto py-8 px-4 md:px-8">
+      {/* Restaurant Header */}
+      <div className="mb-8 pb-6 border-b border-gray-200">
+          <h1 className="text-4xl font-bold text-gray-800">{restaurant.name}</h1>
+          <p className="text-gray-500 mt-2">{restaurant.cuisine}</p>
+          <p className="text-gray-500 text-sm">{restaurant.address}</p>
+      </div>
 
-    return (
-        <div className="container mx-auto p-4">
-            <div className="mb-8">
-                <h1 className="text-4xl font-extrabold text-gray-900">{restaurant.name}</h1>
-                <p className="text-lg text-gray-600 mt-1">{restaurant.cuisine}</p>
-                <p className="text-md text-gray-500 mt-2">{restaurant.address}</p>
-            </div>
-
-            <div>
-                <h2 className="text-2xl font-bold mb-4 border-b pb-2">Menu</h2>
-                <div className="space-y-4">
-                    {menu.length > 0 ? (
-                        menu.map((item) => (
-                            <div key={item._id} className="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
-                                <div>
-                                    <h3 className="font-bold">{item.name}</h3>
-                                    <p className="text-sm text-gray-600">{item.description}</p>
-                                    <p className="text-gray-800 font-semibold mt-1">₹{item.price}</p>
-                                </div>
-                                <button onClick={()=> addToCart(item)} className='bg-orange-500 text-white font-bold px-4 py-2 rounded-lg hover:bg-orange-600'>Add</button>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No menu items available at the moment.</p>
-                    )}
-                </div>
-            </div>
+      {/* Menu Listing */}
+      <div>
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Full Menu</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {menu.length > 0 ? (
+              menu.map((item) => (
+                <FoodItem key={item._id} item={item} />
+              ))
+            ) : (
+              <p>No menu items available at the moment.</p>
+            )}
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
 export default RestaurantMenuPage;
