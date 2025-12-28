@@ -4,9 +4,9 @@ import authService from '../../services/authService';
 import { assets } from '../../assets/frontend_assets/assets';
 
 const LoginPopup = ({ setShowLogin }) => {
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const [currentState, setCurrentState] = useState("Login");
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,16 +22,16 @@ const LoginPopup = ({ setShowLogin }) => {
     try {
       if (currentState === "Login") {
         const userData = await authService.login({ email: formData.email, password: formData.password });
-        login(userData); 
+        login(userData);
       } else {
-        await authService.register(formData);
-        const userData = await authService.login({ email: formData.email, password: formData.password });
+        const userData = await authService.register(formData);
         login(userData);
       }
-      setShowLogin(false); 
+      setShowLogin(false);
     } catch (error) {
-      const message = error.response?.data?.msg || "An error occurred.";
+      const message = error.response?.data?.msg || error.response?.data?.message || "An error occurred.";
       alert(message);
+      console.error("Signup Error:", error.response?.data);
       console.error(error);
     }
   };
@@ -45,32 +45,32 @@ const LoginPopup = ({ setShowLogin }) => {
         </div>
         <div className='flex flex-col gap-5'>
           {currentState === "Sign Up" && (
-            <input 
+            <input
               name='name'
               onChange={handleChange}
               value={formData.name}
-              type="text" 
-              placeholder='Your Name' 
-              required 
+              type="text"
+              placeholder='Your Name'
+              required
               className="outline-none border border-gray-300 p-2.5 rounded"
             />
           )}
-          <input 
+          <input
             name='email'
             onChange={handleChange}
             value={formData.email}
-            type="email" 
-            placeholder="Your Email" 
-            required 
+            type="email"
+            placeholder="Your Email"
+            required
             className="outline-none border border-gray-300 p-2.5 rounded"
           />
-          <input 
+          <input
             name='password'
             onChange={handleChange}
             value={formData.password}
-            type="password" 
-            placeholder='Password' 
-            required 
+            type="password"
+            placeholder='Password'
+            required
             className="outline-none border border-gray-300 p-2.5 rounded"
           />
         </div>
@@ -81,8 +81,8 @@ const LoginPopup = ({ setShowLogin }) => {
           <input type="checkbox" required className="mt-1" />
           <p>By continuing, I agree to the terms of use & privacy policy.</p>
         </div>
-        {currentState === "Login" 
-          ? <p>Create a new Account? <span onClick={() => setCurrentState("Sign Up")} className="text-tomato font-medium cursor-pointer">Click Here</span></p> 
+        {currentState === "Login"
+          ? <p>Create a new Account? <span onClick={() => setCurrentState("Sign Up")} className="text-tomato font-medium cursor-pointer">Click Here</span></p>
           : <p>Already have an Account? <span onClick={() => setCurrentState("Login")} className="text-tomato font-medium cursor-pointer">Login here</span></p>
         }
       </form>

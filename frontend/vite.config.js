@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {    // This tells Vite to forward any request that starts with /api to your backend server.
-        target: 'http://localhost:5001', 
+        target: 'http://localhost:5001',
         changeOrigin: true,
       },
     },

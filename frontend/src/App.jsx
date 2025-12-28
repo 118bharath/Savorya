@@ -6,13 +6,13 @@ import LoginPopup from './components/LoginPopup/LoginPopup';
 import Home from './pages/Home/Home';
 import Cart from './pages/Cart/Cart';
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder';
-import RestaurantMenuPage from './pages/RestaurantMenuPage'; 
-import MyOrdersPage from './pages/MyOrdersPage';             
-import AdminDashboardPage from './pages/AdminDashboardPage'; 
-import AdminOrdersPage from './pages/AdminOrdersPage';       
-import ManageMenuPage from './pages/ManageMenuPage';       
-import ProtectedRoute from './components/ProtectedRoute';      
-import AdminRoute from './components/AdminRoute';          
+import RestaurantMenuPage from './pages/RestaurantMenuPage';
+import MyOrdersPage from './pages/MyOrdersPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import AdminOrdersPage from './pages/AdminOrdersPage';
+import ManageMenuPage from './pages/ManageMenuPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -20,7 +20,7 @@ const App = () => {
   return (
     <>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
-      <div className='w-[80%] mx-auto'> 
+      <div className='w-[90%] mx-auto'>
         <Navbar setShowLogin={setShowLogin} />
         <Routes>
           {/* Public Routes */}

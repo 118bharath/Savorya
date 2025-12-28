@@ -1,35 +1,48 @@
-const express=require('express');
-const dotenv=require('dotenv');
-const cors=require('cors');
-const connectDB=require('./config/db');
-const authRoutes=require('./routes/authRoutes');
-const userRoutes=require('./routes/userRoutes')
-const restaurantRoutes=require('./routes/restaurantRoutes.js');
-const orderRoutes=require('./routes/orderRoutes');
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes')
+const restaurantRoutes = require('./routes/restaurantRoutes.js');
+const orderRoutes = require('./routes/orderRoutes');
 
 
 dotenv.config();
 connectDB();
 
-const app=express();
+const app = express();
 
-const corsOptions={
-    origin:process.env.FRONTEND_URL || 'http://localhost:5173',
-    optionsSuccessStatus:200
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    optionsSuccessStatus: 200
 }
 
 app.use(cors(corsOptions))
 app.use(express.json());
 
-app.get('/',(req,res)=>{
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
+
+app.get('/', (req, res) => {
     res.send('API is running')
 })
 
-app.use('/api/auth',authRoutes);
-app.use('/api/users',userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/restaurants', restaurantRoutes)
-app.use('/api/orders',orderRoutes);
+app.use('/api/orders', orderRoutes);
 
-const PORT=process.env.PORT || 5000;
+app.use((err, req, res, next) => {
+    console.error("Unhandled Error:", err);
+    if (res.headersSent) {
+        return next(err);
+    }
+    res.status(500).json({ msg: 'Server Error (Global)', error: err.message, stack: err.stack });
+});
 
-app.listen(PORT,()=>console.log(`Server is running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
