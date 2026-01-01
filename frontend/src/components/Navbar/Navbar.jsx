@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
-import { assets } from '../../assets/frontend_assets/assets';
+import { useNavigate } from 'react-router-dom';
+import { FiSearch, FiShoppingBag, FiUser, FiLogOut, FiShoppingCart } from 'react-icons/fi';
 
 const Navbar = ({ setShowLogin }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -46,7 +46,7 @@ const Navbar = ({ setShowLogin }) => {
   }, []);
 
   return (
-    <div className='bg-white shadow-md sticky top-4 z-50 py-3 px-8 md:px-12 flex justify-between items-center gap-4 w-full mx-auto rounded-full border border-gray-100 mt-5 transition-all duration-300'>
+    <div className='bg-white shadow-md sticky top-4 z-50 py-5 px-10 md:px-14 flex justify-between items-center gap-4 w-full mx-auto rounded-full border border-gray-100 mt-5 transition-all duration-300'>
 
       {/* Left: Brand & Location */}
       <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('/')}>
@@ -58,8 +58,8 @@ const Navbar = ({ setShowLogin }) => {
       </div>
 
       {/* Center: Search Bar */}
-      <div className='hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2.5 w-full max-w-[500px] transition-all focus-within:ring-2 focus-within:ring-orange-100 focus-within:bg-white border border-transparent focus-within:border-orange-200'>
-        <img src={assets.search_icon} alt="search" className="w-5 opacity-40 mr-3" />
+      <div className='hidden md:flex items-center bg-gray-100 rounded-full px-6 py-3.5 w-full max-w-[500px] transition-all focus-within:ring-2 focus-within:ring-orange-100 focus-within:bg-white border border-transparent focus-within:border-orange-200'>
+        <FiSearch className="text-gray-400 text-lg mr-3" />
         <input
           type="text"
           placeholder="Search for restaurants or dishes"
@@ -68,24 +68,24 @@ const Navbar = ({ setShowLogin }) => {
       </div>
 
       {/* Right: Actions */}
-      <div className='flex items-center gap-6'>
+      <div className='flex items-center gap-10'>
 
         {/* Search Icon (Mobile Only) */}
-        <img src={assets.search_icon} alt="search" className="w-5 md:hidden cursor-pointer opacity-70" />
+        <FiSearch className="text-gray-600 text-xl md:hidden cursor-pointer hover:text-orange-500 transition-colors" />
 
         {/* Orders (Desktop) */}
         {user && (
           <div onClick={handleOrders} className='hidden md:flex flex-col items-center cursor-pointer group text-gray-500 hover:text-[#333333] transition-colors'>
-            <img src={assets.bag_icon} alt="orders" className="w-5 opacity-60 group-hover:opacity-100 transition-opacity" />
-            <span className='text-[10px] font-medium mt-0.5'>Orders</span>
+            <FiShoppingBag className="text-xl mb-0.5 group-hover:text-orange-500 transition-colors" />
+            <span className='text-[10px] font-medium'>Orders</span>
           </div>
         )}
 
         {/* Cart */}
         <div className='relative cursor-pointer group' onClick={() => navigate('/cart')}>
-          <img src={assets.basket_icon} alt="cart" className="w-6 opacity-80 group-hover:opacity-100 transition-opacity" />
+          <FiShoppingCart className="text-2xl text-gray-600 group-hover:text-orange-500 transition-colors" />
           {totalCartItems > 0 && (
-            <div className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
+            <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm">
               {totalCartItems}
             </div>
           )}
@@ -95,7 +95,7 @@ const Navbar = ({ setShowLogin }) => {
         {!user ? (
           <button
             onClick={() => setShowLogin(true)}
-            className="bg-[#333333] hover:bg-black text-white text-sm font-medium px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
+            className="bg-[#333333] hover:bg-black text-white text-sm font-medium px-7 py-2.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
           >
             Sign in
           </button>
@@ -107,7 +107,9 @@ const Navbar = ({ setShowLogin }) => {
               aria-expanded={showDropdown}
               className="flex items-center focus:outline-none opacity-90 hover:opacity-100 transition-opacity"
             >
-              <img src={assets.profile_icon} alt="profile" className="w-8 h-8 rounded-full border border-gray-200 p-0.5" />
+              <div className='w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200 text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-all'>
+                <FiUser className='text-lg' />
+              </div>
             </button>
 
             {showDropdown && (
@@ -117,7 +119,7 @@ const Navbar = ({ setShowLogin }) => {
                     onClick={handleOrders}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors"
                   >
-                    <img src={assets.bag_icon} alt="orders" className="w-4" />
+                    <FiShoppingBag className="text-lg" />
                     <span>Orders</span>
                   </button>
                 </li>
@@ -126,7 +128,7 @@ const Navbar = ({ setShowLogin }) => {
                     onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors"
                   >
-                    <img src={assets.logout_icon} alt="logout" className="w-4" />
+                    <FiLogOut className="text-lg" />
                     <span>Logout</span>
                   </button>
                 </li>
