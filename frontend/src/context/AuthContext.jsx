@@ -9,8 +9,12 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  // Global state to trigger login popup from any component
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
   const login = (userData) => {
     setUser(userData);
+    setShowLoginPrompt(false); // Close popup after login
   };
 
   const logout = () => {
@@ -18,7 +22,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const value = { user, login, logout };
+  // Helper to require auth before an action
+  const requireAuth = (callback) => {
+    if (user) {
+      callback();
+    } else {
+      setShowLoginPrompt(true);
+    }
+  };
+
+  const value = { user, login, logout, showLoginPrompt, setShowLoginPrompt, requireAuth };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

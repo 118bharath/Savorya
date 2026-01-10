@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
@@ -13,27 +13,31 @@ import AdminOrdersPage from './pages/AdminOrdersPage';
 import ManageMenuPage from './pages/ManageMenuPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
+import CategoryPage from './pages/CategoryPage/CategoryPage';
+import { useAuth } from './context/AuthContext';
 
 const App = () => {
-  const [showLogin, setShowLogin] = useState(false);
+  const { showLoginPrompt, setShowLoginPrompt } = useAuth();
 
   return (
     <>
-      {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
+      {showLoginPrompt && <LoginPopup setShowLogin={setShowLoginPrompt} />}
       <div className='w-[90%] mx-auto'>
-        <Navbar setShowLogin={setShowLogin} />
+        <Navbar setShowLogin={setShowLoginPrompt} />
         <Routes>
           {/* Public Routes */}
           <Route path='/' element={<Home />} />
+          <Route path='/category/:categoryName' element={<CategoryPage />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/restaurant/:id' element={<RestaurantMenuPage />} />
 
           {/* User-Only Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path='/order' element={<PlaceOrder />} />
+            <Route path='/order' element={<PlaceOrder />} />    // unwanted route
             <Route path='/my-orders' element={<MyOrdersPage />} />
           </Route>
 
+        //Check this route
           {/* Admin-Only Protected Routes */}
           <Route path="/admin" element={<AdminRoute />}>
             <Route path="dashboard" element={<AdminDashboardPage />} />

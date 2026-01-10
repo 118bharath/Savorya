@@ -46,7 +46,7 @@ const Navbar = ({ setShowLogin }) => {
   }, []);
 
   return (
-    <div className='bg-white shadow-md sticky top-4 z-50 py-5 px-10 md:px-14 flex justify-between items-center gap-4 w-full mx-auto rounded-full border border-gray-100 mt-5 transition-all duration-300'>
+    <div className='bg-white shadow-md sticky top-4 z-50 py-2 px-4 md:px-8 flex justify-between items-center gap-4 w-full mx-auto rounded-full border border-gray-100 mt-5 transition-all duration-300'>
 
       {/* Left: Brand & Location */}
       <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('/')}>

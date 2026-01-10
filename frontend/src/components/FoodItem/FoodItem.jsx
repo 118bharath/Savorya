@@ -1,49 +1,65 @@
 import React from 'react';
-import { useCart } from '../../context/CartContext'; 
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import { assets } from '../../assets/frontend_assets/assets';
 
 const FoodItem = ({ item }) => {
     const { _id, name, price, description, image } = item;
     const { cartItems, addToCart, updateQuantity } = useCart();
+    const { requireAuth } = useAuth();
     const itemInCart = cartItems.find(cartItem => cartItem._id === _id);
     const quantityInCart = itemInCart ? itemInCart.quantity : 0;
 
+    // Wrap addToCart with auth check
+    const handleAddToCart = () => {
+        requireAuth(() => addToCart(item));
+    };
+
     return (
-        <div className='w-full mx-auto rounded-[15px] shadow-lg transition-all duration-300 animate-fadeIn'>
-            <div className="relative">
-                <img className='w-full rounded-t-[15px]' src={image || 'https://via.placeholder.com/300'} alt={name} />
-                {
-                    quantityInCart === 0 
-                        ? <img 
-                            className='w-9 absolute bottom-4 right-4 cursor-pointer rounded-full' 
-                            onClick={() => addToCart(item)} 
-                            src={assets.add_icon_white} 
-                            alt="Add to cart" 
-                          />
-                        : <div className='absolute bottom-4 right-4 flex items-center gap-2.5 p-1.5 rounded-full bg-white'>
-                            <img 
-                                onClick={() => updateQuantity(_id, quantityInCart - 1)} 
-                                src={assets.remove_icon_red} 
-                                alt="Remove one"
-                                className="w-7 cursor-pointer" 
-                            />
-                            <p>{quantityInCart}</p>
-                            <img 
-                                onClick={() => addToCart(item)} 
-                                src={assets.add_icon_green} 
-                                alt="Add one"
-                                className="w-7 cursor-pointer"
-                            />
+        <div className='w-full h-full flex flex-col bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100'>
+            {/* Image Container - Fixed Height */}
+            <div className="relative h-48 overflow-hidden">
+                <img
+                    className='w-full h-full object-cover hover:scale-105 transition-transform duration-500'
+                    src={image || 'https://via.placeholder.com/300'}
+                    alt={name}
+                />
+                {/* Cart Controls */}
+                <div className="absolute bottom-3 right-3">
+                    {quantityInCart === 0
+                        ? <button
+                            onClick={handleAddToCart}
+                            className='w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center text-orange-500 hover:bg-orange-500 hover:text-white transition-all'
+                        >
+                            <span className="text-2xl font-light leading-none pb-0.5">+</span>
+                        </button>
+                        : <div className='flex items-center gap-2 p-1.5 rounded-full bg-white shadow-lg'>
+                            <button
+                                onClick={() => updateQuantity(_id, quantityInCart - 1)}
+                                className="w-7 h-7 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"
+                            >
+                                <span className="text-lg font-medium leading-none">−</span>
+                            </button>
+                            <span className="w-5 text-center font-semibold text-gray-800">{quantityInCart}</span>
+                            <button
+                                onClick={handleAddToCart}
+                                className="w-7 h-7 rounded-full bg-green-50 text-green-500 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all"
+                            >
+                                <span className="text-lg font-medium leading-none">+</span>
+                            </button>
                         </div>
-                }
-            </div>
-            <div className='p-5'>
-                <div className='flex justify-between items-center mb-2.5'>
-                    <p className="text-xl font-medium">{name}</p>
-                    <img src={assets.rating_starts} alt="Rating" className="w-[70px]" />
+                    }
                 </div>
-                <p className="text-gray-500 text-xs">{description}</p>
-                <p className="text-tomato text-2xl font-medium my-2.5">₹{price.toFixed(2)}</p>
+            </div>
+
+            {/* Content */}
+            <div className='p-4 flex flex-col flex-grow'>
+                <div className='flex justify-between items-start gap-2 mb-2'>
+                    <p className="text-base font-semibold text-gray-800 line-clamp-1">{name}</p>
+                    <img src={assets.rating_starts} alt="Rating" className="w-16 flex-shrink-0" />
+                </div>
+                <p className="text-gray-400 text-xs line-clamp-2 flex-grow">{description}</p>
+                <p className="text-orange-500 text-xl font-bold mt-3">₹{price.toFixed(2)}</p>
             </div>
         </div>
     );

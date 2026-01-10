@@ -12,8 +12,34 @@
   scroll-behavior: smooth;
 }
 
+@layer utilities {
+  .animate-scroll {
+    animation: scroll 40s linear infinite;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 body {
   min-height: 100vh;
+  background-color: #ffffff;
 }
 
 a {
@@ -25,6 +51,7 @@ a {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }

@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+
   const headerStyle = {
     backgroundImage: "url('/header_img.png')"
   };
@@ -17,7 +20,10 @@ const Header = () => {
         <p className='hidden md:block text-white text-[1vw]'>
           Choose from a diverse menu featuring a delectable array of dishes crafted with the finest ingredients and culinary expertise. Our mission is to satisfy your cravings and elevate your dining experience, one delicious meal at a time.
         </p>
-        <button className='border-none text-[#747474] font-medium py-[2vw] px-[4vw] md:py-[1vw] md:px-[2.3vw] bg-white text-[max(1vw,13px)] rounded-full'>
+        <button
+          onClick={() => navigate('/category/All')}
+          className='border-none text-[#747474] font-medium py-[2vw] px-[4vw] md:py-[1vw] md:px-[2.3vw] bg-white text-[max(1vw,13px)] rounded-full hover:bg-orange-500 hover:text-white transition-all duration-300 cursor-pointer'
+        >
           View Menu
         </button>
       </div>
